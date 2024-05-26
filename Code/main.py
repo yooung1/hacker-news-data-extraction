@@ -16,6 +16,7 @@ class RobotNews:
         self.driver = webdriver.Chrome(service=self.service)
         self.my_dict = {}
 
+    # Função criada para esperar elemento carregar
     def wait_for_object_to_appear(self, time, xpath_name):
         try:
             WebDriverWait(self.driver, time).until(
@@ -25,33 +26,22 @@ class RobotNews:
             return False
         return True
 
+    # Acesso ao Site Hacker news    
     def open_browser(self):
         start_time = time.time()
         self.driver.get(self.base_url)
         self.driver.maximize_window()
         xpath_to_find = "//div[@class='RNNXgb']"
-        xpath_to_type = "//textarea[@class='gLFyf']"
         if self.wait_for_object_to_appear(10, xpath_to_find):
-            input_field = self.driver.find_element(By.XPATH, xpath_to_type)
-            input_field.send_keys("Hacker News" + Keys.ENTER)
+            print("Data ready to be extracted")
         else:
-            print(f"Error while trying to find element {xpath}")
+            print(f"Error while trying to find element {xpath_to_find}")
 
         end_time = time.time()
         print(f"Time elapsed for opening browser: {end_time - start_time} seconds")
 
-    def open_website(self):
-        start_time = time.time()
-        xpath = "//h3[@class='LC20lb MBeuO DKV0Md']"
-        if self.wait_for_object_to_appear(10, xpath):
-            link_to_click = self.driver.find_element(By.XPATH, xpath)
-            link_to_click.click()
-        else:
-            print(f"Error while trying to find element {xpath}")
 
-        end_time = time.time()
-        print(f"Time elapsed for opening website: {end_time - start_time} seconds")
-
+    # Extrair dados -- Titulo e Link
     def extract_data_from_website(self):
         start_time = time.time()
         xpath = "//span[@class='titleline']"
@@ -71,6 +61,7 @@ class RobotNews:
         end_time = time.time()
         print(f"Time elapsed for extracting data: {end_time - start_time} seconds")
 
+    # Criar arquivo CSV com os dados extraidos
     def create_csv_file(self):
         start_time = time.time()
         pd.DataFrame(self.my_dict).to_csv(self.csv_path + r"\HACKER_NEWS_DATA.csv", index=False)
@@ -78,6 +69,7 @@ class RobotNews:
         end_time = time.time()
         print(f"Time elapsed for creating CSV file: {end_time - start_time} seconds")
 
+    # Fechar navegação
     def close_connection(self):
         self.driver.quit()
 
@@ -85,15 +77,13 @@ class RobotNews:
 if __name__ == "__main__":
     print("Initializing Application\n")
     path = r"C:\Users\Young1\Desktop\Selenium Course\Hacker News\Drivers\chromedriver-win64\chromedriver.exe"
-    url = "https://www.google.com/"
+    url = "https://news.ycombinator.com/"
     csv_path = r"C:\Users\Young1\Desktop\Selenium Course\Hacker News\Data\\"
     print("Instantiating Object")
     bot = RobotNews(base_url=url, path=path, csv_path=csv_path)
     try:
         print("Opening browser\n")
         bot.open_browser()
-        print("Opening website\n")
-        bot.open_website()
         print("Extracting Data from Hacker News\n")
         bot.extract_data_from_website()
         print("Creating CSV file with all the data collected\n")
