@@ -1,12 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import pandas as pd
-import time
-
+#######
 
 class RobotNews:
     def __init__(self, base_url, path, csv_path):
@@ -28,7 +26,6 @@ class RobotNews:
 
     # Acesso ao Site Hacker news    
     def open_browser(self):
-        start_time = time.time()
         self.driver.get(self.base_url)
         self.driver.maximize_window()
         xpath_to_find = "//div[@class='RNNXgb']"
@@ -37,13 +34,8 @@ class RobotNews:
         else:
             print(f"Error while trying to find element {xpath_to_find}")
 
-        end_time = time.time()
-        print(f"Time elapsed for opening browser: {end_time - start_time} seconds")
-
-
     # Extrair dados -- Titulo e Link
     def extract_data_from_website(self):
-        start_time = time.time()
         xpath = "//span[@class='titleline']"
         xpath_children_title = "./a"
         xpath_children_link = "./a"
@@ -58,16 +50,9 @@ class RobotNews:
                 links.append(link)
             self.my_dict = {"Titles": titles, "Links": links}
 
-        end_time = time.time()
-        print(f"Time elapsed for extracting data: {end_time - start_time} seconds")
-
     # Criar arquivo CSV com os dados extraidos
     def create_csv_file(self):
-        start_time = time.time()
         pd.DataFrame(self.my_dict).to_csv(self.csv_path + r"\HACKER_NEWS_DATA.csv", index=False)
-
-        end_time = time.time()
-        print(f"Time elapsed for creating CSV file: {end_time - start_time} seconds")
 
     # Fechar navegação
     def close_connection(self):
