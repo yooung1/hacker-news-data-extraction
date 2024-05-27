@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import pandas as pd
-#
+#######
 
 class RobotNews:
     def __init__(self, base_url, path, csv_path):
